@@ -1,4 +1,6 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
+
+const { schema, v } = require("./secure/userValidatoer");
 
 const userSchema = new mongoose.Schema({
 	fullname: {
@@ -6,7 +8,7 @@ const userSchema = new mongoose.Schema({
 		type: String,
 		trim: true,
 	},
-	emai: {
+	email: {
 		type: String,
 		unique: true,
 		trim: true,
@@ -24,6 +26,11 @@ const userSchema = new mongoose.Schema({
 	},
 });
 
-const User = mongoose.model('User', userSchema);
+userSchema.statics.schemaVliation = function (body) {
+	const check = v.compile(schema);
+	return check(body);
+};
+
+const User = mongoose.model("User", userSchema);
 
 module.exports = User;
