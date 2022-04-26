@@ -1,7 +1,7 @@
 const bcrypt = require("bcryptjs");
 const flash = require("connect-flash/lib/flash");
 const passport = require("passport");
-
+const fetch = require("node-fetch");
 const User = require("../models/User");
 
 exports.login = (req, res) => {
@@ -52,10 +52,40 @@ exports.createUser = async (req, res) => {
 	}
 };
 
-exports.loginHandeler = (req, res, next) => {
+exports.loginHandeler = async (req, res, next) => {
+	const response_key = req.body["g-recaptcha-response"];
+
+	if (!response_key) {
+		req.flash("error", "اعتبار سنجی الزامی می باشد");
+		return res.redirect("/users/login");
+	}
+	try {
+		const secret_key = process.env.SECRET_KEY;
+		const url = `https://www.google.com/recaptcha/api/siteverify?secret=${secret_key}&response=${response_key}`;
+
+		const response = await fetch(url, {
+			method: "post",
+			headers: { "Content-Type": "application/json" },
+		});
+	} catch (err) {
+		console.log("err");
+	}
+
 	passport.authenticate("local", {
-		successRedirect: "/dashboard",
 		failureRedirect: "/users/login",
 		failureFlash: true,
 	})(req, res, next);
+};
+
+exports.rememberMe = (req, res) => {
+	req.body.remember
+		? (req.session.cookie.maxAge = 24 * 60 * 60 * 1000) //1 day
+		: (req.session.cookie.expires = null);
+	res.redirect("/dashboard");
+};
+
+exports.logout = (req, res) => {
+	req.logout();
+	req.flash("success-msg", "خروج موفقیت آمیز بود");
+	res.redirect("/users/login");
 };

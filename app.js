@@ -1,5 +1,6 @@
 const path = require("path");
 
+const bodyParser = require("body-parser");
 const express = require("express");
 const expressLayouts = require("express-ejs-layouts");
 const passport = require("passport");
@@ -7,23 +8,24 @@ const dotenv = require("dotenv");
 const morgan = require("morgan");
 const flash = require("connect-flash");
 const session = require("express-session");
-
-const blogRouter = require("./routes/blog");
-const dashboardRouter = require("./routes/dashboard");
+const MongoStore = require("connect-mongo");
 const connectDb = require("./config/db");
 dotenv.config({ path: "./config/config.env" });
+const winston = require("./config/winston");
 
 require("./config/password");
 
 const app = express();
 
-app.use(express.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 app.use(
 	session({
 		secret: "keyboard cat",
 		resave: false,
 		saveUninitialized: false,
 		cookie: { maxAge: 80000 },
+		store: MongoStore.create({ mongoUrl: "mongodb://localhost/session" }),
 	})
 );
 
@@ -33,9 +35,10 @@ app.use(flash());
 
 //*logging
 if (process.env.NODE_ENV === "develoment") {
-	app.use(morgan("dev"));
+	app.use(morgan("combined", { stream: winston.stream }));
 }
 
+//*dbconnect
 connectDb();
 
 //*static
@@ -48,8 +51,8 @@ app.set("view engine", "ejs");
 app.set("views", "views");
 
 //*Routes
-app.use(blogRouter);
-app.use("/dashboard", dashboardRouter);
+app.use(require("./routes/blog"));
+app.use("/dashboard", require("./routes/dashboard"));
 app.use("/users", require("./routes/users"));
 app.use((req, res) => {
 	res.render("404", {
@@ -58,6 +61,5 @@ app.use((req, res) => {
 	});
 });
 
-app.listen(process.env.PORT, () =>
-	console.log(`server is running in ${process.env.NODE_ENV} mode on port ${process.env.PORT}`)
-);
+const PORT = process.env.PORT;
+app.listen(PORT, console.log(`Server running in ${process.env.NODE_ENV} mode on port ${PORT}`));

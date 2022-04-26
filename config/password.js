@@ -3,7 +3,6 @@ const passport = require("passport");
 const bcrypt = require("bcryptjs");
 
 const User = require("../models/User");
-
 passport.use(
 	new LocalStrategy({ usernameField: "email" }, async function (email, password, done) {
 		User.findOne({ email }, async function (err, user) {
