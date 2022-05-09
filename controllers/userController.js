@@ -2,7 +2,9 @@ const bcrypt = require("bcryptjs");
 const flash = require("connect-flash/lib/flash");
 const passport = require("passport");
 const fetch = require("node-fetch");
+
 const User = require("../models/User");
+const { get500 } = require("../controllers/errorsController");
 
 exports.login = (req, res) => {
 	res.render("login", {
@@ -49,6 +51,7 @@ exports.createUser = async (req, res) => {
 		}
 	} catch (err) {
 		console.log(err);
+		get500(req, res);
 	}
 };
 
@@ -69,6 +72,7 @@ exports.loginHandeler = async (req, res, next) => {
 		});
 	} catch (err) {
 		console.log("err");
+		get500(req, res);
 	}
 
 	passport.authenticate("local", {

@@ -1,7 +1,6 @@
 <form class="form-signin" action="/users/login" method="POST">
     <h1 class="h3 mb-3 font-weight-normal">ورود به بخش مدیریت</h1>
-    <%- include("./includes/loginMes.ejs") %>
-
+    <%- include("./includes/loginMessages.ejs") %>
     <label for="inputEmail" class="sr-only">آدرس ایمیل</label>
     <input
         type="email"
@@ -23,11 +22,15 @@
     />
     <div class="checkbox mb-3">
         <label>
-            <input name="remember" type="checkbox" value="remember-me" /> من را به خاطر بسپار
+            <input name="remember" type="checkbox" value="remember-me" /> من را
+            به خاطر بسپار
         </label>
     </div>
     <div class="form-group">
-    <div class="g-recaptcha" data-sitekey="6LcT3aAfAAAAANlc8e3c3Y_pCG1dcVNQ1RgTASOS"></div>
-</div>
+        <div
+            class="g-recaptcha"
+            data-sitekey="6Lcs0Q0aAAAAACw0Kznf2C8aNmrOi0PcrB5rgobS"
+        ></div>
+    </div>
     <button class="btn btn-lg btn-primary btn-block" type="submit">ورود</button>
 </form>

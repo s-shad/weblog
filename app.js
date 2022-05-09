@@ -21,7 +21,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(
 	session({
-		secret: "keyboard cat",
+		secret: process.env.SESSION_SECRET,
 		resave: false,
 		saveUninitialized: false,
 		cookie: { maxAge: 80000 },
@@ -51,15 +51,12 @@ app.set("view engine", "ejs");
 app.set("views", "views");
 
 //*Routes
-app.use(require("./routes/blog"));
-app.use("/dashboard", require("./routes/dashboard"));
+app.use("/", require("./routes/blog"));
 app.use("/users", require("./routes/users"));
-app.use((req, res) => {
-	res.render("404", {
-		pageTitle: "404 | صفحه مورد نظر یافت نشد",
-		path: "/404",
-	});
-});
+app.use("/dashboard", require("./routes/dashboard"));
+
+//* 404 Page
+app.use(require("./controllers/errorsController").get404);
 
 const PORT = process.env.PORT;
 app.listen(PORT, console.log(`Server running in ${process.env.NODE_ENV} mode on port ${PORT}`));
