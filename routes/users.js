@@ -16,6 +16,22 @@ router.post("/login", userController.loginHandeler, userController.rememberMe);
 //@ router GEt /users/register
 router.get("/register", userController.register);
 
+//@desc forget password Page
+//@ router GEt /users/forget-password
+router.get("/forget-password", userController.forgetPassword);
+
+//@desc forget password Page
+//@ router GEt /users/forget-password
+router.get("/reset-password/:token", userController.resetPass);
+
+//@desc handel forget password Page
+//@ router POST /users/forget-password
+router.post("/forget-password", userController.handelforgetPass);
+
+//@desc handel Handel Reset password
+//@ router POST /users/reset-password
+router.post("/reset-password/:id", userController.handelResetPass);
+
 //@desc Logout
 //@ router GEt /users/register
 router.get("/logout", userController.logout);

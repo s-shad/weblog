@@ -17,6 +17,10 @@ router.get("/add-post", isLoggedIn, adminController.getAddPost);
 //@ router GET /dashboard/edit-post/:id
 router.get("/edit-post/:id", isLoggedIn, adminController.getEditPost);
 
+// @desc editPost
+//@ router POST /dashboard/edit-post/:id
+router.post("/edit-post/:id", isLoggedIn, adminController.editPost);
+
 // @desc addPost
 //@ router GET /dashboard/add-post
 router.post("/add-post", isLoggedIn, adminController.createPost);
@@ -28,5 +32,9 @@ router.get("/delete-post/:id", isLoggedIn, adminController.deteltePost);
 // @desc image upload
 //@ router POSt /dashboard/imgae-upload
 router.post("/image-upload", isLoggedIn, adminController.uploadImage);
+
+// @desc handle Search
+//@ router POSt /dashboard/search
+router.post("/search", isLoggedIn, adminController.handleDashSearch);
 
 module.exports = router;

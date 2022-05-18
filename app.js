@@ -3,6 +3,7 @@ const path = require("path");
 const bodyParser = require("body-parser");
 const express = require("express");
 const expressLayouts = require("express-ejs-layouts");
+const fileUpload = require("express-fileupload");
 const passport = require("passport");
 const dotenv = require("dotenv");
 const morgan = require("morgan");
@@ -11,7 +12,7 @@ const session = require("express-session");
 const MongoStore = require("connect-mongo");
 const connectDb = require("./config/db");
 dotenv.config({ path: "./config/config.env" });
-const winston = require("./config/winston");
+// const winston = require("./config/winston");
 
 require("./config/password");
 
@@ -19,6 +20,11 @@ const app = express();
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+
+//* File Upload Middelware
+app.use(fileUpload());
+
+//* session
 app.use(
 	session({
 		secret: process.env.SESSION_SECRET,
@@ -34,9 +40,9 @@ app.use(passport.session());
 app.use(flash());
 
 //*logging
-if (process.env.NODE_ENV === "develoment") {
-	app.use(morgan("combined", { stream: winston.stream }));
-}
+// if (process.env.NODE_ENV === "develoment") {
+// 	app.use(morgan("combined", { stream: winston.stream }));
+// }
 
 //*dbconnect
 connectDb();

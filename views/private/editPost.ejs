@@ -3,7 +3,7 @@
     <%- include("../includes/validationErrors.ejs") %>
 </div>
 <div class="d-flex align-items-center justify-content-center">
-    <form action="/dashboard/edit-post/<%= blog._id %> " class="w-50" method="POST">
+    <form action="/dashboard/edit-post/<%= blog._id %> " class="w-50" method="POST" enctype="multipart/form-data"> 
         <div class="form-group">
             <label for="title"> پست</label>
             <input
@@ -14,12 +14,28 @@
                 value="<%= blog.title %>"
             />
         </div>
-
+        <label for="selectedThumbnail">عکس بند انگشتی</label>
+        <div class="input-group mb-3">
+            <input
+                type="file"
+                class="custom-file-input"
+                name="thumbnail"
+                id="selectedThumbnail"
+                aria-describedby="inputGroupFileAddon03"
+            />
+            <label
+                id="thumbStatus"
+                class="custom-file-label"
+                for="inputGroupFile03"
+                >عکس مورد نظر را انتخاب کنید</label
+            >
+        </div>
         <div class="form-group">
             <label for="status">وضعیت</label>
             <select name="status" class="form-control w-25" id="status">
-                <option value="<%= blog.status %> " selected><%= blog.status=='public' ? "عمومی ": "خصوصی" %> </option>
-                <option value="<%= blog.status=='public'? "private":"public" %> " selected><%= blog.status=='public' ? "خصوصی ": "عمومی" %> </option>
+                <option value="<%= blog.status %>" selected><%= blog.status=='public' ? "عمومی": "خصوصی" %> </option>
+                <option value="<%= blog.status==='public'? "private":"public" %>"><%= blog.status=='public' ? "خصوصی": "عمومی" %> </option>
+                
 
             </select>
         </div>

@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const { schema, v } = require("./secure/postValidatoer");
 
 const blogSchema = new mongoose.Schema({
 	title: {
@@ -16,6 +17,11 @@ const blogSchema = new mongoose.Schema({
 		default: "public",
 		enum: ["public", "private"],
 	},
+	thumbnail: {
+		type: String,
+		required: true,
+	},
+
 	user: {
 		type: mongoose.Schema.Types.ObjectId,
 		ref: "User",
@@ -26,4 +32,10 @@ const blogSchema = new mongoose.Schema({
 	},
 });
 
+blogSchema.index({ title: "text" });
+
+blogSchema.statics.postValidations = function (body) {
+	const check = v.compile(schema);
+	return check(body);
+};
 module.exports = mongoose.model("Blog", blogSchema);
